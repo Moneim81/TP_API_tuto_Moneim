@@ -51,6 +51,7 @@ class TutoManager extends Manager
             $tuto->setCreatedAt($row["createdAt"]);
             $tutos[] = $tuto;
         }
+        $tutosPage = [];
         for ($i = 0; $i <= 4; $i++) {
             $idPage = ($page - 1) * 5 + $i;
             if (!isset($tutos[$idPage])) {

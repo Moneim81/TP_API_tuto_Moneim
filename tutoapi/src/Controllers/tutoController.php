@@ -44,7 +44,7 @@ class tutoController extends abstractController
         $tuto->setDescription($_POST["description"]);
         $now = new \DateTime();
         $tuto->setCreatedAt($now->format('Y-m-d H:i:s'));
-        
+
         $manager = new TutoManager();
         $tuto = $manager->add($tuto);
         // TODO: ajout d'un tuto
@@ -52,9 +52,19 @@ class tutoController extends abstractController
         return $this->jsonResponse($tuto, 200);
     }
 
+    public function indexPage($page)
+    {
+        $tutos = [];
+
+        $manager = new TutoManager();
+
+        $tutos = $manager->findPage($page);
+
+        return $this->jsonResponse($tutos, 200);
+    }
     function update($id)
     {
-        parse_str(file_get_contents('php://input'),$_PATCH);
+        parse_str(file_get_contents('php://input'), $_PATCH);
 
         $manager = new TutoManager();
 
@@ -77,5 +87,4 @@ class tutoController extends abstractController
         $tutos = $manager->delete($tuto);
         return $this->jsonResponse($tutos, 200);
     }
-
 }

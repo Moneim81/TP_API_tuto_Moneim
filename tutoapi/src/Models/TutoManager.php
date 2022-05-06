@@ -30,6 +30,38 @@ class TutoManager extends Manager
         return $tuto;
     }
 
+
+    public function findPage($page)
+    {
+        // Connexion à la BDD
+        $dbh = static::connectDb();
+
+        // Requête
+        $sth = $dbh->prepare('SELECT * FROM tutos');
+        $sth->execute();
+
+        $tutos = [];
+
+        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+
+            $tuto = new Tuto();
+            $tuto->setId($row['id']);
+            $tuto->setTitle($row['title']);
+            $tuto->setDescription($row['description']);
+            $tuto->setCreatedAt($row["createdAt"]);
+            $tutos[] = $tuto;
+        }
+        for ($i = 0; $i <= 4; $i++) {
+            $idPage = ($page - 1) * 5 + $i;
+            if (!isset($tutos[$idPage])) {
+                break;
+            }
+            $tutosPage[$i] = $tutos[$idPage];
+        }
+
+        return $tutosPage;
+    }
+
     public function findAll()
     {
 
@@ -42,7 +74,7 @@ class TutoManager extends Manager
 
         $tutos = [];
 
-        while($row = $sth->fetch(\PDO::FETCH_ASSOC)){
+        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
 
             $tuto = new Tuto();
             $tuto->setId($row['id']);
@@ -50,14 +82,13 @@ class TutoManager extends Manager
             $tuto->setDescription($row['description']);
             $tuto->setCreatedAt($row["createdAt"]);
             $tutos[] = $tuto;
-
         }
 
         return $tutos;
-
     }
 
-    public function add(Tuto $tuto){
+    public function add(Tuto $tuto)
+    {
 
         // Connexion à la BDD
         $dbh = static::connectDb();
@@ -76,10 +107,10 @@ class TutoManager extends Manager
         $id = $dbh->lastInsertId();
         $tuto->setId($id);
         return $tuto;
-
     }
 
-    public function update(Tuto $tuto){
+    public function update(Tuto $tuto)
+    {
 
         $dbh = static::connectDb();
 
@@ -88,7 +119,7 @@ class TutoManager extends Manager
         $descr = $tuto->getDescription();
         $dateAt = $tuto->getCreatedAt();
 
-        $sth = $dbh->prepare('Update tutos SET title="'.$titre.'",description="'.$descr.'",createdAt="'.$dateAt.'" WHERE id='.$id);
+        $sth = $dbh->prepare('Update tutos SET title="' . $titre . '",description="' . $descr . '",createdAt="' . $dateAt . '" WHERE id=' . $id);
         $sth->execute();
         return $tuto;
     }
@@ -99,15 +130,9 @@ class TutoManager extends Manager
         $dbh = static::connectDb();
 
         $id = $tuto->getId();
-        $sth = $dbh->prepare('delete from tutos where id='.$id);
+        $sth = $dbh->prepare('delete from tutos where id=' . $id);
         $sth->execute();
 
         return $tuto;
     }
-
-
-
-
-
-
 }

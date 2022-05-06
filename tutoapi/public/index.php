@@ -24,7 +24,13 @@ switch (true) {
     case preg_match('#^tutos((\?)|$)#', $uri) && $method == 'GET':
 
         $controller = new tutoController();
-
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            return $controller->indexPage($page);
+        } else {
+            return $controller->index();
+        }
+        break;
         return $controller->index();
 
         break;
@@ -49,14 +55,7 @@ switch (true) {
 
     case preg_match('#^tutos((\?)|$)#', $uri) && $method == 'GET':
 
-        $controller = new tutoController();
-        if (isset($_GET['page'])) {
-            $page = $_GET['page'];
-            return $controller->indexPage($page);
-        } else {
-            return $controller->index();
-        }
-        break;
+
 
     case preg_match('#^tutos/(\d+)$#', $uri, $matches) && $method == 'DELETE':
 
